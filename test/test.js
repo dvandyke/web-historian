@@ -77,7 +77,9 @@ describe("Node Server Request Listener Function", function() {
       function(){
         var fileContents = fs.readFileSync(archive.paths.list, 'utf8');
         expect(res._responseCode).to.equal(302);
-        expect(fileContents).to.equal(url + "\n");
+        // expect(fileContents).to.equal(url + "\n");
+        expect(fileContents).to.equal('{"'+url+'":true}');
+
         done();
     });
   });
@@ -104,12 +106,12 @@ describe("html fetcher helpers", function(){
   });
 
   it("should read urls from sites.txt", function(done){
-    var urlArray = ["example1.com", "example2.com"];
-    var resultArray;
+    var urlArray = {"example1.com": true, "example2.com": true};
+    var resultArray = {};
 
-    fs.writeFileSync(archive.paths.list, urlArray.join("\n"));
+    fs.writeFileSync(archive.paths.list, urlArray);
     archive.readListOfUrls(function(urls){
-      resultArray = urls;
+      resultArray[urls] = true;
     });
 
     waitForThen(
